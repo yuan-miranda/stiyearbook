@@ -1,8 +1,8 @@
 async function fetchImages(folder = 'stoles') {
     try {
-        const response = await fetch('/images/image-index.json');
+        const response = await fetch(`/api/images?folder=${folder}`);
         const data = await response.json();
-        return data[folder] || [];
+        return data.images || [];
     } catch (error) {
         console.error(error);
 
@@ -33,7 +33,6 @@ async function generateGrid() {
             const img = document.createElement('img');
             img.src = imageSources[i - 1];
             img.alt = `Photo ${i}`;
-            img.loading = 'lazy';
 
             img.onload = () => gridItem.classList.add('has-image');
             img.onerror = () => {
