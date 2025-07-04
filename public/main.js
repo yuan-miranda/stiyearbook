@@ -11,7 +11,6 @@ async function fetchImages(folder = 'stoles') {
     }
 }
 
-// Intersection Observer for lazy loading
 let imageObserver;
 
 function createImageObserver() {
@@ -26,7 +25,7 @@ function createImageObserver() {
             if (entry.isIntersecting) {
                 const gridItem = entry.target;
                 const imageSrc = gridItem.getAttribute('data-src');
-                
+
                 if (imageSrc) {
                     loadImage(gridItem, imageSrc);
                     imageObserver.unobserve(gridItem);
@@ -39,18 +38,18 @@ function createImageObserver() {
 function loadImage(gridItem, imageSrc) {
     const img = document.createElement('img');
     const index = gridItem.getAttribute('data-index');
-    
+
     img.alt = `Photo ${index}`;
     img.onload = () => {
         gridItem.classList.add('has-image');
         gridItem.innerHTML = '';
         gridItem.appendChild(img);
     };
-    
+
     img.onerror = () => {
         gridItem.innerHTML = `<div class="placeholder">Photo ${index}</div>`;
     };
-    
+
     img.src = imageSrc;
 }
 
@@ -67,11 +66,7 @@ async function generateGrid() {
     container.innerHTML = '';
 
     // disconnect previous observer if it exists
-    if (imageObserver) {
-        imageObserver.disconnect();
-    }
-    
-    // create new observer
+    if (imageObserver) imageObserver.disconnect();
     createImageObserver();
 
     for (let i = 1; i <= count; i++) {
@@ -81,14 +76,11 @@ async function generateGrid() {
 
         // check if image source exists for this index
         if (imageSources[i - 1]) {
-            // store the image source in data attribute for lazy loading
             gridItem.setAttribute('data-src', imageSources[i - 1]);
-            gridItem.innerHTML = `<div class="placeholder">Photo ${i}</div>`;
-            
-            // observe this element for intersection
+            gridItem.innerHTML = `<div class="placeholder"></div>`;
+
             imageObserver.observe(gridItem);
         } else {
-            // if no image source, show placeholder
             gridItem.innerHTML = `<div class="placeholder">Photo ${i}</div>`;
         }
 
