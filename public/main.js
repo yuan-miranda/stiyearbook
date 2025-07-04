@@ -1,20 +1,26 @@
-async function fetchImages() {
+async function fetchImages(folder = 'stoles') {
     try {
-        const response = await fetch('/api/images');
+        const response = await fetch(`/api/images?folder=${folder}`);
         const data = await response.json();
         return data.images || [];
     } catch (error) {
         console.error(error);
 
         // fallback for local development
-        return ['images/514339117_1144316810835962_6147571552177112786_n.jpg'];
+        const folderPath = `images/${folder}/`;
+        return Array(16).fill('').map((_, i) => '');
     }
 }
 
 async function generateGrid() {
-    const count = parseInt(document.getElementById('gridCount').value) || 6;
+    const inputValue = parseInt(document.getElementById('gridCount').value) || 8;
     const container = document.getElementById('gridContainer');
-    const imageSources = await fetchImages();
+
+    const activeFolder = document.getElementById('stolesBtn').classList.contains('active') ? 'stoles' : 'toga';
+    const imageSources = await fetchImages(activeFolder);
+
+    // cap to the maximum available images
+    const count = Math.min(inputValue, imageSources.length);
 
     container.innerHTML = '';
 
@@ -47,6 +53,21 @@ async function generateGrid() {
     }
 }
 
+function toggleButton(folder) {
+    const stolesBtn = document.getElementById('stolesBtn');
+    const togaBtn = document.getElementById('togaBtn');
+
+    if (folder === 'stoles') {
+        stolesBtn.classList.add('active');
+        togaBtn.classList.remove('active');
+    } else if (folder === 'toga') {
+        togaBtn.classList.add('active');
+        stolesBtn.classList.remove('active');
+    }
+
+    generateGrid();
+}
+
 function keyboardShortcuts() {
     const gridInput = document.getElementById('gridCount');
 
@@ -66,10 +87,26 @@ function keyboardShortcuts() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const gridInput = document.getElementById('gridCount');
     gridInput.min = '1';
-    gridInput.value = '8';
+
+    // initial fetch of images from stoles folder (default active)
+    const imageSources = await fetchImages('stoles');
+    const maxImages = imageSources.length;
+
+    gridInput.max = maxImages;
+    gridInput.value = maxImages;
+
+    // prevent input from exceeding maxImages and non-numerical input
+    gridInput.addEventListener('input', () => {
+        // Remove any non-digit characters
+        gridInput.value = gridInput.value.replace(/[^0-9]/g, '');
+
+        const value = parseInt(gridInput.value);
+        if (value > maxImages) gridInput.value = maxImages;
+        if (value < 1 && gridInput.value !== '') gridInput.value = 1;
+    });
 
     keyboardShortcuts();
     generateGrid();

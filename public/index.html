@@ -10,7 +10,14 @@
 
 <body>
     <div class="container">
-        <h1>STI College Baliuag SHS Yearbook 2024 - 2025</h1>
+        <div class="header-section">
+            <h1>STI College Baliuag SHS Yearbook 2024 - 2025</h1>
+            <div class="toggle-buttons">
+                <button id="stolesBtn" class="toggle-btn active" onclick="toggleButton('stoles')">Graduation
+                    Stoles</button>
+                <button id="togaBtn" class="toggle-btn" onclick="toggleButton('toga')">Graduation Toga</button>
+            </div>
+        </div>
         <div class="controls">
             <input type="number" id="gridCount" placeholder="Grid count">
             <button onclick="generateGrid()">Show</button>

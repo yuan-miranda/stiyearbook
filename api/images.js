@@ -3,15 +3,17 @@ import { join } from 'path';
 
 export default async function handler(req, res) {
     try {
-        const imagesDir = join(process.cwd(), 'public', 'images');
+        const { folder = 'stoles' } = req.query;
+        const imagesDir = join(process.cwd(), 'public', 'images', folder);
         const files = await readdir(imagesDir);
 
         // add the path prefix to all files
-        const images = files.map(file => `images/${file}`);
+        const images = files.map(file => `images/${folder}/${file}`);
 
         res.json({ images });
 
     } catch (error) {
+        console.error(error);
         res.status(500).json({ images: [] });
     }
 }
