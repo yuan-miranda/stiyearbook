@@ -1,36 +1,14 @@
-const imageIndexCache = new Map();
-
 async function fetchImages(folder = 'stoles') {
     try {
-        if (imageIndexCache.has('imageIndex')) {
-            const data = imageIndexCache.get('imageIndex');
-            return data[folder] || [];
-        }
-
-        const response = await fetch('/images/image-index.json', {
-            headers: {
-                'Cache-Control': 'public, max-age=3600'
-            }
-        });
+        const response = await fetch('/images/image-index.json');
         const data = await response.json();
-        
-        imageIndexCache.set('imageIndex', data);
-        
         return data[folder] || [];
     } catch (error) {
         console.error(error);
 
+        // fallback for local development
         return Array(16).fill('').map((_, i) => '');
     }
-}
-
-function preloadImages(imageSources) {
-    imageSources.forEach(src => {
-        if (src) {
-            const img = new Image();
-            img.src = src;
-        }
-    });
 }
 
 async function generateGrid() {
@@ -50,12 +28,12 @@ async function generateGrid() {
         gridItem.className = 'grid-item';
         gridItem.setAttribute('data-index', i);
 
+        // check if image source exists for this index
         if (imageSources[i - 1]) {
             const img = document.createElement('img');
             img.src = imageSources[i - 1];
             img.alt = `Photo ${i}`;
             img.loading = 'lazy';
-            img.crossOrigin = 'anonymous';
 
             img.onload = () => gridItem.classList.add('has-image');
             img.onerror = () => {
@@ -73,11 +51,6 @@ async function generateGrid() {
         gridItem.onclick = () => { };
         container.appendChild(gridItem);
     }
-
-    // preload images for the next set
-    const preloadCount = Math.min(8, imageSources.length - count);
-    const imagesToPreload = imageSources.slice(count, count + preloadCount);
-    preloadImages(imagesToPreload);
 }
 
 function toggleButton(folder) {
@@ -118,15 +91,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const gridInput = document.getElementById('gridCount');
     gridInput.min = '1';
 
+    // initial fetch of images from stoles folder (default active)
     const imageSources = await fetchImages('stoles');
-    const togaImages = await fetchImages('toga');
     const maxImages = imageSources.length;
 
     gridInput.max = maxImages;
     gridInput.value = maxImages;
-
-    preloadImages(imageSources);
-    preloadImages(togaImages);
 
     // prevent input from exceeding maxImages and non-numerical input
     gridInput.addEventListener('input', () => {
