@@ -33,6 +33,7 @@ async function generateGrid() {
             const img = document.createElement('img');
             img.src = imageSources[i - 1];
             img.alt = `Photo ${i}`;
+            img.loading = 'lazy';
 
             img.onload = () => gridItem.classList.add('has-image');
             img.onerror = () => {
