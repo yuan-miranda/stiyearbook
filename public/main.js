@@ -39,20 +39,9 @@ function loadImage(gridItem, imageSrc) {
     const img = document.createElement('img');
     const index = gridItem.getAttribute('data-index');
 
-    // check if this is a special image
-    const specialImages = [
-        '515768937_1144333677500942_5922598893660348309_n.jpg',
-        '514339117_1144316810835962_6147571552177112786_n.jpg'
-    ];
-    
-    const isSpecialImage = specialImages.some(specialImg => imageSrc.includes(specialImg));
-
     img.alt = `Photo ${index}`;
     img.onload = () => {
         gridItem.classList.add('has-image');
-        if (isSpecialImage) {
-            gridItem.classList.add('special-image');
-        }
         gridItem.innerHTML = '';
         gridItem.appendChild(img);
     };
