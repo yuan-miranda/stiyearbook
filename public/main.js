@@ -11,6 +11,49 @@ async function fetchImages(folder = 'stoles') {
     }
 }
 
+// Intersection Observer for lazy loading
+let imageObserver;
+
+function initializeImageObserver() {
+    if (imageObserver) {
+        imageObserver.disconnect();
+    }
+
+    imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const gridItem = entry.target;
+                const imageSrc = gridItem.getAttribute('data-src');
+                const index = gridItem.getAttribute('data-index');
+
+                if (imageSrc) {
+                    loadImage(gridItem, imageSrc, index);
+                }
+                
+                imageObserver.unobserve(gridItem);
+            }
+        });
+    }, {
+        rootMargin: '50px' // Start loading when item is 50px away from viewport
+    });
+}
+
+function loadImage(gridItem, src, index) {
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = `Photo ${index}`;
+
+    img.onload = () => {
+        gridItem.classList.add('has-image');
+        gridItem.innerHTML = '';
+        gridItem.appendChild(img);
+    };
+
+    img.onerror = () => {
+        gridItem.innerHTML = `<div class="placeholder">Photo ${index}</div>`;
+    };
+}
+
 async function generateGrid() {
     const inputValue = parseInt(document.getElementById('gridCount').value) || 8;
     const container = document.getElementById('gridContainer');
@@ -22,6 +65,7 @@ async function generateGrid() {
     const count = Math.min(inputValue, imageSources.length);
 
     container.innerHTML = '';
+    initializeImageObserver();
 
     for (let i = 1; i <= count; i++) {
         const gridItem = document.createElement('div');
@@ -30,19 +74,12 @@ async function generateGrid() {
 
         // check if image source exists for this index
         if (imageSources[i - 1]) {
-            const img = document.createElement('img');
-            img.src = imageSources[i - 1];
-            img.alt = `Photo ${i}`;
-            img.loading = 'lazy';
-
-            img.onload = () => gridItem.classList.add('has-image');
-            img.onerror = () => {
-                img.remove();
-                gridItem.innerHTML = `<div class="placeholder">Photo ${i}</div>`;
-            };
-
-            gridItem.appendChild(img);
-
+            // Store the image source but don't load it yet
+            gridItem.setAttribute('data-src', imageSources[i - 1]);
+            gridItem.innerHTML = `<div class="placeholder">Photo ${i}</div>`;
+            
+            // Observe this element for lazy loading
+            imageObserver.observe(gridItem);
         } else {
             // if no image source, show placeholder
             gridItem.innerHTML = `<div class="placeholder">Photo ${i}</div>`;

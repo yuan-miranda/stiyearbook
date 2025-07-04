@@ -134,6 +134,12 @@ h1 {
     height: 100%;
     object-fit: cover;
     border-radius: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.grid-item.has-image img {
+    opacity: 1;
 }
 
 .grid-item.has-image {
