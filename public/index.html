@@ -1,11 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>STI Yearbook Grid</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    Hello, World!
+    <div class="container">
+        <h1>STI College Baliuag SHS Yearbook 2024 - 2025</h1>
+        <div class="controls">
+            <input type="number" id="gridCount" placeholder="Grid count">
+            <button onclick="generateGrid()">Show</button>
+        </div>
+        <div id="gridContainer" class="grid"></div>
+    </div>
+
+    <script src="main.js"></script>
 </body>
+
 </html>
