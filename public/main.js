@@ -74,17 +74,39 @@ async function generateGrid() {
         gridItem.className = 'grid-item';
         gridItem.setAttribute('data-index', i);
 
-        // check if image source exists for this index
-        if (imageSources[i - 1]) {
-            gridItem.setAttribute('data-src', imageSources[i - 1]);
-            gridItem.innerHTML = `<div class="placeholder"></div>`;
-
-            imageObserver.observe(gridItem);
+        // special handling for first two items as links
+        if (i === 1) {
+            gridItem.classList.add('link-item');
+            gridItem.classList.add(activeFolder === 'stoles' ? 'stoles-theme' : 'toga-theme');
+            gridItem.innerHTML = `
+                <div class="link-content">
+                    <div class="link-icon">📘</div>
+                    <div class="link-text">Facebook Source</div>
+                </div>
+            `;
+            gridItem.onclick = () => window.open('https://www.facebook.com/share/p/18xGFYCayu/', '_blank');
+        } else if (i === 2) {
+            gridItem.classList.add('link-item');
+            gridItem.classList.add(activeFolder === 'stoles' ? 'stoles-theme' : 'toga-theme');
+            gridItem.innerHTML = `
+                <div class="link-content">
+                    <div class="link-icon">⚡</div>
+                    <div class="link-text">GitHub Repository</div>
+                </div>
+            `;
+            gridItem.onclick = () => window.open('https://github.com/yuan-miranda/stiyearbook', '_blank');
         } else {
-            gridItem.innerHTML = `<div class="placeholder">Photo ${i}</div>`;
+             // adjust index since first two are links
+            const imageIndex = i - 3;
+            if (imageSources[imageIndex]) {
+                gridItem.setAttribute('data-src', imageSources[imageIndex]);
+                gridItem.innerHTML = `<div class="placeholder"></div>`;
+                imageObserver.observe(gridItem);
+            } else {
+                gridItem.innerHTML = `<div class="placeholder">Photo ${i}</div>`;
+            }
         }
 
-        gridItem.onclick = () => { };
         container.appendChild(gridItem);
     }
 }
@@ -125,7 +147,7 @@ function keyboardShortcuts() {
 
 document.addEventListener('DOMContentLoaded', async () => {
     const gridInput = document.getElementById('gridCount');
-    gridInput.min = '1';
+    gridInput.min = '4';
 
     // initial fetch of images from stoles folder (default active)
     const imageSources = await fetchImages('stoles');
@@ -136,12 +158,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // prevent input from exceeding maxImages and non-numerical input
     gridInput.addEventListener('input', () => {
-        // Remove any non-digit characters
         gridInput.value = gridInput.value.replace(/[^0-9]/g, '');
 
         const value = parseInt(gridInput.value);
         if (value > maxImages) gridInput.value = maxImages;
-        if (value < 1 && gridInput.value !== '') gridInput.value = 1;
+        if (value < 4 && gridInput.value !== '') gridInput.value = 4;
     });
 
     keyboardShortcuts();
