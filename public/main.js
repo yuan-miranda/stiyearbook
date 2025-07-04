@@ -1,13 +1,12 @@
 async function fetchImages(folder = 'stoles') {
     try {
-        const response = await fetch(`/api/images?folder=${folder}`);
+        const response = await fetch('/images/image-index.json');
         const data = await response.json();
-        return data.images || [];
+        return data[folder] || [];
     } catch (error) {
         console.error(error);
 
         // fallback for local development
-        const folderPath = `images/${folder}/`;
         return Array(16).fill('').map((_, i) => '');
     }
 }
