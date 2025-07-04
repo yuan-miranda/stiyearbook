@@ -224,6 +224,44 @@ h1 {
     }
 }
 
+@keyframes confetti {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-100px) rotate(360deg); }
+}
+
+@keyframes glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6); }
+}
+
+.grid-item.special-image {
+    position: relative;
+}
+
+.grid-item.special-image:hover {
+    animation: glow 1.5s ease-in-out infinite;
+}
+
+.grid-item.special-image:hover::before {
+    content: '🎉';
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    font-size: 1.5rem;
+    animation: confetti 1s ease-out infinite;
+    z-index: 10;
+}
+
+.grid-item.special-image:hover::after {
+    content: '✨';
+    position: absolute;
+    top: 20%;
+    right: 15%;
+    font-size: 1.2rem;
+    animation: confetti 1.2s ease-out infinite 0.3s;
+    z-index: 10;
+}
+
 .grid-item:hover:not(.link-item) {
     border-color: #007bff;
     background-color: #f8f9fa;
