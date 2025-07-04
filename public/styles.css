@@ -222,17 +222,15 @@ h1 {
     }
 }
 
-@media (hover: hover) {
-    .grid-item:hover:not(.link-item) {
-        border-color: #007bff;
-        background-color: #f8f9fa;
-        transform: scale(1.02);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
+.grid-item:hover:not(.link-item) {
+    border-color: #007bff;
+    background-color: #f8f9fa;
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-    .controls button:hover {
-        background-color: #0056b3;
-    }
+.controls button:hover {
+    background-color: #0056b3;
 }
 
 @media (max-width: 48rem) {
