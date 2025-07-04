@@ -114,13 +114,18 @@ async function generateGrid() {
 function toggleButton(folder) {
     const stolesBtn = document.getElementById('stolesBtn');
     const togaBtn = document.getElementById('togaBtn');
+    const body = document.body;
 
     if (folder === 'stoles') {
         stolesBtn.classList.add('active');
         togaBtn.classList.remove('active');
+        body.classList.remove('toga-theme');
+        body.classList.add('stoles-theme');
     } else if (folder === 'toga') {
         togaBtn.classList.add('active');
         stolesBtn.classList.remove('active');
+        body.classList.remove('stoles-theme');
+        body.classList.add('toga-theme');
     }
 
     generateGrid();
@@ -148,6 +153,9 @@ function keyboardShortcuts() {
 document.addEventListener('DOMContentLoaded', async () => {
     const gridInput = document.getElementById('gridCount');
     gridInput.min = '4';
+
+    // set initial theme to stoles
+    document.body.classList.add('stoles-theme');
 
     // initial fetch of images from stoles folder (default active)
     const imageSources = await fetchImages('stoles');
