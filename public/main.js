@@ -16,6 +16,7 @@ async function generateGrid(folder = 'stoles') {
     const imageSources = await fetchImages(folder);
     gridContainer.innerHTML = '';
 
+    // create all blank grid items
     imageSources.forEach(src => {
         const gridItem = document.createElement('div');
         gridItem.classList.add('grid-item');
@@ -35,15 +36,28 @@ function initImageObserver() {
         rootMargin: '50px',
         threshold: 0.1
     };
+
+    const loadDelay = 300;
+    const timers = new WeakMap();
+
     observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
+            const gridItem = entry.target;
             if (entry.isIntersecting) {
-                const gridItem = entry.target;
-                const imageSrc = gridItem.getAttribute('data-src');
-
-                if (imageSrc) {
-                    loadImage(gridItem, imageSrc);
-                    observer.unobserve(gridItem);
+                // hard-coded delay to prevent all images from loading all at once
+                const timer = setTimeout(() => {
+                    const imageSrc = gridItem.getAttribute('data-src');
+                    if (imageSrc) {
+                        loadImage(gridItem, imageSrc);
+                        observer.unobserve(gridItem);
+                        timers.delete(gridItem);
+                    }
+                }, loadDelay);
+                timers.set(gridItem, timer);
+            } else {
+                if (timers.has(gridItem)) {
+                    clearTimeout(timers.get(gridItem));
+                    timers.delete(gridItem);
                 }
             }
         });
