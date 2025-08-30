@@ -3,26 +3,28 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Aim High with STI!</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <div class="container">
+    <div class="content">
         <div class="header-section">
             <h1>STI College Baliuag SHS Yearbook 2024 - 2025</h1>
-            <div class="toggle-buttons">
-                <button id="stolesBtn" class="toggle-btn active" onclick="toggleButton('stoles')">Graduation
-                    Stoles</button>
-                <button id="togaBtn" class="toggle-btn" onclick="toggleButton('toga')">Graduation Toga</button>
+            <div class="button-wrapper">
+                <button id="stolesBtn" class="active">Graduation Stoles</button>
+                <button id="togaBtn">Graduation Toga</button>
             </div>
         </div>
-        <div class="controls">
-            <input type="number" id="gridCount" placeholder="Grid count">
-            <button onclick="generateGrid()">Show</button>
-        </div>
-        <div id="gridContainer" class="grid"></div>
+
+        <div class="grid-container"></div>
+    </div>
+
+    <div class="link-actions">
+        <a href="https://github.com/yuan-miranda/stiyearbook" target="_blank" aria-label="GitHub Repository">
+            <img src="media/icon/github-mark.svg" alt="GitHub" width="32" height="32" title="GitHub Repository">
+        </a>
     </div>
 
     <script src="main.js"></script>
