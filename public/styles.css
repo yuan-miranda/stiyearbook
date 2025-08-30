@@ -131,6 +131,9 @@ h1 {
 }
 
 .link-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
     position: fixed;
     margin: 1rem;
     z-index: 1;
